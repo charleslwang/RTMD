@@ -3,7 +3,10 @@ pandas
 numpy
 matplotlib
 statsmodels
-pmdarima
 yfinance
 scikit-learn
 tensorflow
+requests
+beautifulsoup4
+utils
+transformers

@@ -5,6 +5,7 @@ import datetime
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from sklearn.preprocessing import MinMaxScaler
+from web_scraper import get_news, summarize_news, analyze_sentiment
 import yfinance as yf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
@@ -153,8 +154,34 @@ def lstm_prediction(data):
     except Exception as e:
         st.error(f"Error in LSTM prediction: {str(e)}")
 
+# Fetch and display news articles with AI summaries and sentiment
+def display_news_summary(company_name):
+    st.header(f"News Summary and Sentiment for {company_name}")
 
-# Main function
+    # Fetch recent news
+    st.subheader("Fetching latest news...")
+    articles = get_news(company_name)
+
+    if not articles:
+        st.write("No recent news articles found.")
+        return
+
+    # Generate AI summaries
+    st.subheader("Summarizing news articles...")
+    summaries = summarize_news(articles)
+
+    # Perform sentiment analysis
+    sentiments = analyze_sentiment(articles)
+
+    # Display summaries and sentiments
+    st.subheader("Recent News Summaries and Sentiment Analysis")
+    for summary, sentiment in zip(summaries, sentiments):
+        st.write(f"**Title**: [{summary['title']}]({summary['link']})")
+        st.write(f"**Summary**: {summary['summary']}")
+        st.write(f"**Sentiment**: {sentiment['sentiment']} (Confidence: {sentiment['score']:.2f})")
+        st.write("---")
+
+
 def main():
     st.sidebar.header("Input Parameters")
 
@@ -182,7 +209,7 @@ def main():
             st.line_chart(data['Close'])
 
             # Create tabs for different analyses
-            tab1, tab2 = st.tabs(["ARIMA Prediction", "LSTM Prediction"])
+            tab1, tab2, tab3 = st.tabs(["ARIMA Prediction", "LSTM Prediction", "News Summary"])
 
             with tab1:
                 st.header("ARIMA Model Prediction")
@@ -192,6 +219,9 @@ def main():
                 st.header("LSTM Model Prediction")
                 lstm_prediction(data)
 
+            with tab3:
+                st.header("News Summary and Sentiment Analysis")
+                display_news_summary(stock_symbol)  # Call the news summary function
 
 if __name__ == "__main__":
     main()
