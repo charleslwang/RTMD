@@ -8,7 +8,7 @@ summarizer = pipeline("summarization")
 sentiment_analyzer = pipeline("sentiment-analysis")
 
 def get_news(company_name):
-    api_key = "YOUR_NEWSAPI_KEY"  # Replace with your News API key
+    api_key = "a1560b2b32b04d66af80cdc465aefbd6"  # Replace with your News API key
     url = f"https://newsapi.org/v2/everything?q={company_name}&sortBy=publishedAt&language=en&apiKey={api_key}"
     response = requests.get(url)
     data = response.json()
