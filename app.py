@@ -156,31 +156,30 @@ def lstm_prediction(data):
 
 # Fetch and display news articles with AI summaries and sentiment
 def display_news_summary(company_name):
-    st.header(f"News Summary and Sentiment for {company_name}")
+    st.header(f"📰 News Summary and Sentiment Analysis for {company_name}")
 
     # Fetch recent news
-    st.subheader("Fetching latest news...")
+    st.subheader("🔄 Fetching latest news...")
     articles = get_news(company_name)
 
     if not articles:
         st.write("No recent news articles found.")
         return
 
-    # Generate AI summaries
-    st.subheader("Summarizing news articles...")
     summaries = summarize_news(articles)
 
     # Perform sentiment analysis
+    st.subheader("Sentiment Analysis")
     sentiments = analyze_sentiment(articles)
 
-    # Display summaries and sentiments
-    st.subheader("Recent News Summaries and Sentiment Analysis")
-    for summary, sentiment in zip(summaries, sentiments):
-        st.write(f"**Title**: [{summary['title']}]({summary['link']})")
-        st.write(f"**Summary**: {summary['summary']}")
-        st.write(f"**Sentiment**: {sentiment['sentiment']} (Confidence: {sentiment['score']:.2f})")
-        st.write("---")
-
+    # Display summaries and sentiments in a cleaner format
+    st.subheader("Recent News Summaries and Sentiment")
+    for idx, (summary, sentiment) in enumerate(zip(summaries, sentiments), start=1):
+        with st.expander(f"News Article {idx}: {summary['title']}"):
+            st.write(f"**Summary**: {summary['summary']}")
+            st.write(f"**Sentiment**: {sentiment['sentiment']} (Confidence: {sentiment['score']:.2f})")
+            st.write(f"[Read full article]({summary['link']})")
+        st.write("---")  # Add a separator line between articles
 
 def main():
     st.sidebar.header("Input Parameters")
